@@ -1,0 +1,10 @@
+<%= data.userQuery %>
+    <% if(data.loggedIn) { %>
+        <ul>
+            <% data.searchResult.forEach(result=> { %>
+                <li>
+                    <%= result %>
+                </li>
+                <% }) %>
+        </ul>
+        <% } %>

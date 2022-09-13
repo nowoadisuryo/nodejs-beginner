@@ -1,0 +1,6 @@
+Semantic versioning in Node.js Libraries
+Major.Minor.Patch
+Example for lodash
+lodash: "^4.17.11", it is mean that I want to update lodash when there are a minor and patch update
+lodash: "~4.17.11", it is mean that I want to update lodash for only path update
+lodash: "4.17.11", it is mean that I want to never update lodash
