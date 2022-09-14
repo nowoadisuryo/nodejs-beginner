@@ -1,0 +1,4 @@
+{
+    "name": "example-library",
+    "main": "./lib/example-library.js"
+}
