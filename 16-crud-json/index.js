@@ -38,8 +38,8 @@ const server = http.createServer(function (req, res) {
 
         urlParameter.id = parseInt(urlParameter.id);
 
-        fs.readFile('./data.json', 'utf-8', function (err, data) {
-            if (err) sendResponse(res, httpStatusCode.NOT_FOUND, responseMessage.NOT_FOUND, null);
+        fs.readFile('./data.json', 'utf-8', function (error, data) {
+            if (error) sendResponse(res, httpStatusCode.NOT_FOUND, responseMessage.NOT_FOUND, null);
             else {
                 const existingData = JSON.parse(data);
                 const foundData = existingData.filter(data => data.id === urlParameter.id)[0] || null;
@@ -49,8 +49,8 @@ const server = http.createServer(function (req, res) {
         });
     }
     if (req.url === '/' && req.method === 'GET') {
-        fs.readFile('./data.json', 'utf-8', function (err, data) {
-            if (err) sendResponse(res, httpStatusCode.NOT_FOUND, responseMessage.NOT_FOUND, null);
+        fs.readFile('./data.json', 'utf-8', function (error, data) {
+            if (error) sendResponse(res, httpStatusCode.NOT_FOUND, responseMessage.NOT_FOUND, null);
             else {
                 const existingData = JSON.parse(data);
                 sendResponse(res, httpStatusCode.OK, responseMessage.SUCCESS, existingData);
@@ -61,11 +61,11 @@ const server = http.createServer(function (req, res) {
         req.on('data', function (data) {
             let userInput = JSON.parse(data);
 
-            fs.readFile('./data.json', 'utf-8', function (err, data) {
+            fs.readFile('./data.json', 'utf-8', function (error, data) {
                 let id;
                 let newData = [];
 
-                if (err) id = 1;
+                if (error) id = 1;
                 else {
                     const existingData = JSON.parse(data);
 
@@ -79,8 +79,8 @@ const server = http.createServer(function (req, res) {
                 userInput.id = id;
                 newData.push(userInput);
 
-                fs.writeFile('./data.json', JSON.stringify(newData), function (err) {
-                    if (err) sendResponse(res, httpStatusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR, null);
+                fs.writeFile('./data.json', JSON.stringify(newData), function (error) {
+                    if (error) sendResponse(res, httpStatusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR, null);
                     else sendResponse(res, httpStatusCode.CREATED, responseMessage.SUCCESS, userInput);
                 });
             });
@@ -95,8 +95,8 @@ const server = http.createServer(function (req, res) {
 
             urlParameter.id = parseInt(urlParameter.id);
 
-            fs.readFile('./data.json', function (err, data) {
-                if (err) sendResponse(res, httpStatusCode.NOT_FOUND, responseMessage.NOT_FOUND, null);
+            fs.readFile('./data.json', function (error, data) {
+                if (error) sendResponse(res, httpStatusCode.NOT_FOUND, responseMessage.NOT_FOUND, null);
                 else {
                     let existingData = JSON.parse(data);
                     const foundIndex = existingData.findIndex(data => data.id === urlParameter.id);
@@ -106,8 +106,8 @@ const server = http.createServer(function (req, res) {
                         if (userInput.birthDay) existingData[foundIndex].birthDay = userInput.birthDay;
                         if (userInput.role) existingData[foundIndex].role = userInput.role;
 
-                        fs.writeFile('./data.json', JSON.stringify(existingData), function (err) {
-                            if (err) sendResponse(res, httpStatusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR, null);
+                        fs.writeFile('./data.json', JSON.stringify(existingData), function (error) {
+                            if (error) sendResponse(res, httpStatusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR, null);
                             else sendResponse(res, httpStatusCode.OK, responseMessage.SUCCESS, existingData[foundIndex]);
                         })
                     }
@@ -125,8 +125,8 @@ const server = http.createServer(function (req, res) {
 
         urlParameter.id = parseInt(urlParameter.id);
 
-        fs.readFile('./data.json', function (err, data) {
-            if (err) sendResponse(res, httpStatusCode.NOT_FOUND, responseMessage.NOT_FOUND, null);
+        fs.readFile('./data.json', function (error, data) {
+            if (error) sendResponse(res, httpStatusCode.NOT_FOUND, responseMessage.NOT_FOUND, null);
             else {
                 let existingData = JSON.parse(data);
                 let foundIndex = existingData.findIndex(data => data.id === urlParameter.id);
@@ -135,8 +135,8 @@ const server = http.createServer(function (req, res) {
                 else {
                     const newData = existingData.filter(data => data.id !== urlParameter.id);
 
-                    fs.writeFile('./data.json', JSON.stringify(newData), function (err) {
-                        if (err) sendResponse(res, httpStatusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR, null);
+                    fs.writeFile('./data.json', JSON.stringify(newData), function (error) {
+                        if (error) sendResponse(res, httpStatusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR, null);
                         else sendResponse(res, httpStatusCode.OK, responseMessage.SUCCESS, null);
                     });
                 }
