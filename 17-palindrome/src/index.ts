@@ -1,6 +1,7 @@
 export class PalindromeChecker {
-    isAPalindrome(str: string): boolean {
-        const reversed = str.split("").reverse().join("");
-        return reversed.replace(/\s/g, '').toLowerCase() === str.replace(/\s/g, '').toLowerCase();
+    isAPalindrome(sentenceOrWord: string): boolean {
+        const reversedSentenceOrWord = sentenceOrWord.split("").reverse().join("");
+        const allSpace = /\s/g;
+        return reversedSentenceOrWord.replace(allSpace, '').toLowerCase() === sentenceOrWord.replace(allSpace, '').toLowerCase();
     }
 }

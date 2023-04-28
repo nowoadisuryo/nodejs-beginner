@@ -32,17 +32,17 @@ const httpStatusCode = {
 
 const server = http.createServer(function (req, res) {
     if (req.url.match('/?id=') && req.method === 'GET') {
-        let q = querystring.parse(req.url.split('?')[1]);
+        let urlParameter = querystring.parse(req.url.split('?')[1]);
 
-        if (!q.id) sendResponse(res, httpStatusCode.BAD_REQUEST, responseMessage.ID_PARAM_REQUIRED, null);
+        if (!urlParameter.id) sendResponse(res, httpStatusCode.BAD_REQUEST, responseMessage.ID_PARAM_REQUIRED, null);
 
-        q.id = parseInt(q.id);
+        urlParameter.id = parseInt(urlParameter.id);
 
         fs.readFile('./data.json', 'utf-8', function (err, data) {
             if (err) sendResponse(res, httpStatusCode.NOT_FOUND, responseMessage.NOT_FOUND, null);
             else {
                 const existingData = JSON.parse(data);
-                const foundData = existingData.filter(data => data.id === q.id)[0] || null;
+                const foundData = existingData.filter(data => data.id === urlParameter.id)[0] || null;
                 if (foundData !== null) sendResponse(res, httpStatusCode.OK, responseMessage.SUCCESS, foundData);
                 else sendResponse(res, httpStatusCode.NOT_FOUND, responseMessage.NOT_FOUND, foundData);
             }
@@ -89,17 +89,17 @@ const server = http.createServer(function (req, res) {
     if (req.url.match('/?id=') && req.method === 'PATCH') {
         req.on('data', function (data) {
             let userInput = JSON.parse(data);
-            let q = querystring.parse(req.url.split('?')[1]);
+            let urlParameter = querystring.parse(req.url.split('?')[1]);
 
-            if (!q.id) sendResponse(res, httpStatusCode.BAD_REQUEST, responseMessage.ID_PARAM_REQUIRED, null);
+            if (!urlParameter.id) sendResponse(res, httpStatusCode.BAD_REQUEST, responseMessage.ID_PARAM_REQUIRED, null);
 
-            q.id = parseInt(q.id);
+            urlParameter.id = parseInt(urlParameter.id);
 
             fs.readFile('./data.json', function (err, data) {
                 if (err) sendResponse(res, httpStatusCode.NOT_FOUND, responseMessage.NOT_FOUND, null);
                 else {
                     let existingData = JSON.parse(data);
-                    const foundIndex = existingData.findIndex(data => data.id === q.id);
+                    const foundIndex = existingData.findIndex(data => data.id === urlParameter.id);
 
                     if (foundIndex >= 0) {
                         if (userInput.name) existingData[foundIndex].name = userInput.name;
@@ -119,31 +119,35 @@ const server = http.createServer(function (req, res) {
         });
     }
     if (req.url.match('/?id=') && req.method === 'DELETE') {
-        let q = querystring.parse(req.url.split('?')[1]);
+        let urlParameter = querystring.parse(req.url.split('?')[1]);
 
-        if (!q.id) sendResponse(res, httpStatusCode.BAD_REQUEST, responseMessage.ID_PARAM_REQUIRED, null);
+        if (!urlParameter.id) sendResponse(res, httpStatusCode.BAD_REQUEST, responseMessage.ID_PARAM_REQUIRED, null);
 
-        q.id = parseInt(q.id);
+        urlParameter.id = parseInt(urlParameter.id);
 
         fs.readFile('./data.json', function (err, data) {
             if (err) sendResponse(res, httpStatusCode.NOT_FOUND, responseMessage.NOT_FOUND, null);
             else {
                 let existingData = JSON.parse(data);
-                let foundIndex = existingData.findIndex(data => data.id === q.id);
+                let foundIndex = existingData.findIndex(data => data.id === urlParameter.id);
 
                 if (foundIndex < 0) sendResponse(res, httpStatusCode.NOT_FOUND, responseMessage.NOT_FOUND, null);
+                else {
+                    const newData = existingData.filter(data => data.id !== urlParameter.id);
 
-                existingData = existingData.filter(data => data.id !== q.id);
-
-                fs.writeFile('./data.json', JSON.stringify(existingData), function (err) {
-                    if (err) sendResponse(res, httpStatusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR, null);
-                    else sendResponse(res, httpStatusCode.OK, responseMessage.SUCCESS, null);
-                });
+                    fs.writeFile('./data.json', JSON.stringify(newData), function (err) {
+                        if (err) sendResponse(res, httpStatusCode.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR, null);
+                        else sendResponse(res, httpStatusCode.OK, responseMessage.SUCCESS, null);
+                    });
+                }
             }
         });
     }
 });
 
-server.listen(3000, 'localhost', function () {
+const PORT = 3000;
+const HOST = 'localhost';
+
+server.listen(PORT, HOST, function () {
     console.log('Sever is running.');
 });
